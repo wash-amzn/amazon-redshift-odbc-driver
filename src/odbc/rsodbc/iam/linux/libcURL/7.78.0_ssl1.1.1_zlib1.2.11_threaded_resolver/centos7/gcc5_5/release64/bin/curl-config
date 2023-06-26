@@ -6,7 +6,7 @@
 #                            | (__| |_| |  _ <| |___
 #                             \___|\___/|_| \_\_____|
 #
-# Copyright (C) 2001 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+# Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
 #
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution. The terms
@@ -19,9 +19,11 @@
 # This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
 # KIND, either express or implied.
 #
+# SPDX-License-Identifier: curl
+#
 ###########################################################################
 
-prefix=/bamboo/bamboo-agent-home/xml-data/build-dir/ThirdParty/libcURL/7.78.0/_src/build/7.78.0_ssl1.1.1_zlib1.2.11_threaded_resolver/centos7/gcc5_5/release64
+prefix="/home/wash/amazon-redshift-odbc-driver/src/odbc/rsodbc/iam/linux/libcURL/7.78.0_ssl1.1.1_zlib1.2.11_threaded_resolver/centos7/gcc5_5/release64"
 exec_prefix=${prefix}
 includedir=${prefix}/include
 cppflag_curl_staticlib=-DCURL_STATICLIB
@@ -76,7 +78,7 @@ while test $# -gt 0; do
         ;;
 
     --cc)
-        echo "gcc55"
+        echo "gcc"
         ;;
 
     --prefix)
@@ -84,7 +86,7 @@ while test $# -gt 0; do
         ;;
 
     --feature|--features)
-        for feature in AsynchDNS HSTS HTTPS-proxy IPv6 Largefile NTLM SSL TLS-SRP UnixSockets alt-svc libz ""; do
+        for feature in AsynchDNS HSTS HTTPS-proxy IPv6 Largefile NTLM NTLM_WB SSL TLS-SRP UnixSockets alt-svc libz threadsafe ""; do
             test -n "$feature" && echo "$feature"
         done
         ;;
@@ -96,7 +98,7 @@ while test $# -gt 0; do
         ;;
 
     --version)
-        echo libcurl 7.78.0
+        echo libcurl 7.88.1
         exit 0
         ;;
 
@@ -108,11 +110,11 @@ while test $# -gt 0; do
         # dash as that's used for things like version 1.2.3-CVS
         cpatch=`echo $checkfor | cut -d. -f3 | cut -d- -f1`
 
-        vmajor=`echo 7.78.0 | cut -d. -f1`
-        vminor=`echo 7.78.0 | cut -d. -f2`
+        vmajor=`echo 7.88.1 | cut -d. -f1`
+        vminor=`echo 7.88.1 | cut -d. -f2`
         # when extracting the patch part we strip off everything after a
         # dash as that's used for things like version 1.2.3-CVS
-        vpatch=`echo 7.78.0 | cut -d. -f3 | cut -d- -f1`
+        vpatch=`echo 7.88.1 | cut -d. -f3 | cut -d- -f1`
 
         if test "$vmajor" -gt "$cmajor"; then
             exit 0;
@@ -128,12 +130,12 @@ while test $# -gt 0; do
             fi
         fi
 
-        echo "requested version $checkfor is newer than existing 7.78.0"
+        echo "requested version $checkfor is newer than existing 7.88.1"
         exit 1
         ;;
 
     --vernum)
-        echo 074e00
+        echo 075801
         exit 0
         ;;
 
@@ -172,7 +174,7 @@ while test $# -gt 0; do
 
     --static-libs)
         if test "Xyes" != "Xno" ; then
-          echo ${exec_prefix}/lib/libcurl.a -L/$OPENSSL_PATH/lib -O3 -m64 -fpic -L/bamboo/bamboo-agent-home/xml-data/build-dir/ThirdParty/zlib/1.2.11/centos7/gcc5_5/release64/lib -L/bamboo/centos7/gcc5_5/release64/lib -lssl -lcrypto -lssl -lcrypto -lz -pthread
+          echo "${exec_prefix}/lib/libcurl.a" -L/home/wash/amazon-redshift-odbc-driver/src/odbc/rsodbc/iam/linux/openssl/1.1.1/centos7/gcc5_5/release64/lib -lssl -lcrypto -lssl -lcrypto -lz -pthread
         else
           echo "curl was built with static libraries disabled" >&2
           exit 1
@@ -180,7 +182,7 @@ while test $# -gt 0; do
         ;;
 
     --configure)
-        echo " 'CC=gcc55' 'CXX=g++55' 'CFLAGS=-O3 -m64 -fpic' 'CPPFLAGS=-I//bamboo/bamboo-agent-home/xml-data/build-dir/ThirdParty/openssl/1.1.1/centos7/gcc5_5/release64/include' 'LDFLAGS=-L/$OPENSSL_PATH/lib -O3 -m64 -fpic' '--prefix=/bamboo/bamboo-agent-home/xml-data/build-dir/ThirdParty/libcURL/7.78.0/_src/build/7.78.0_ssl1.1.1_zlib1.2.11_threaded_resolver/centos7/gcc5_5/release64' '--with-ssl=/bamboo/bamboo-agent-home/xml-data/build-dir/ThirdParty/openssl/1.1.1/centos7/gcc5_5/release64' '--with-zlib=/bamboo/bamboo-agent-home/xml-data/build-dir/ThirdParty/zlib/1.2.11/centos7/gcc5_5/release64' '--without-gssapi' '--enable-threaded-resolver' '--without-libidn' '--enable-ipv' '--enable-shared=no' '--disable-ldap' '--disable-ldaps' '--disable-ntlm-wb'"
+        echo " '--prefix=/home/wash/amazon-redshift-odbc-driver/src/odbc/rsodbc/iam/linux/libcURL/7.78.0_ssl1.1.1_zlib1.2.11_threaded_resolver/centos7/gcc5_5/release64' '--disable-shared' '--enable-threaded-resolver' '--with-openssl=/home/wash/amazon-redshift-odbc-driver/src/odbc/rsodbc/iam/linux/openssl/1.1.1/centos7/gcc5_5/release64' '--with-pic'"
         ;;
 
     *)
