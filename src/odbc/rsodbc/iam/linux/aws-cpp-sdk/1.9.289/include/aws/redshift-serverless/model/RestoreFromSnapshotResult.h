@@ -25,12 +25,12 @@ namespace RedshiftServerless
 {
 namespace Model
 {
-  class AWS_REDSHIFTSERVERLESS_API RestoreFromSnapshotResult
+  class RestoreFromSnapshotResult
   {
   public:
-    RestoreFromSnapshotResult();
-    RestoreFromSnapshotResult(const Aws::AmazonWebServiceResult<Aws::Utils::Json::JsonValue>& result);
-    RestoreFromSnapshotResult& operator=(const Aws::AmazonWebServiceResult<Aws::Utils::Json::JsonValue>& result);
+    AWS_REDSHIFTSERVERLESS_API RestoreFromSnapshotResult();
+    AWS_REDSHIFTSERVERLESS_API RestoreFromSnapshotResult(const Aws::AmazonWebServiceResult<Aws::Utils::Json::JsonValue>& result);
+    AWS_REDSHIFTSERVERLESS_API RestoreFromSnapshotResult& operator=(const Aws::AmazonWebServiceResult<Aws::Utils::Json::JsonValue>& result);
 
 
     
@@ -120,6 +120,28 @@ namespace Model
      */
     inline RestoreFromSnapshotResult& WithSnapshotName(const char* value) { SetSnapshotName(value); return *this;}
 
+
+    
+    inline const Aws::String& GetRequestId() const{ return m_requestId; }
+
+    
+    inline void SetRequestId(const Aws::String& value) { m_requestId = value; }
+
+    
+    inline void SetRequestId(Aws::String&& value) { m_requestId = std::move(value); }
+
+    
+    inline void SetRequestId(const char* value) { m_requestId.assign(value); }
+
+    
+    inline RestoreFromSnapshotResult& WithRequestId(const Aws::String& value) { SetRequestId(value); return *this;}
+
+    
+    inline RestoreFromSnapshotResult& WithRequestId(Aws::String&& value) { SetRequestId(std::move(value)); return *this;}
+
+    
+    inline RestoreFromSnapshotResult& WithRequestId(const char* value) { SetRequestId(value); return *this;}
+
   private:
 
     Namespace m_namespace;
@@ -127,6 +149,8 @@ namespace Model
     Aws::String m_ownerAccount;
 
     Aws::String m_snapshotName;
+
+    Aws::String m_requestId;
   };
 
 } // namespace Model

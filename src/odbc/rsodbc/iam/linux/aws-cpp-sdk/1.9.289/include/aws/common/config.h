@@ -12,11 +12,12 @@
  * should be considered to be an implementation detail, and can change at any
  * time.
  */
-/* #undef AWS_HAVE_GCC_OVERFLOW_MATH_EXTENSIONS */
-/* #undef AWS_HAVE_GCC_INLINE_ASM */
-/* #undef AWS_HAVE_MSVC_MULX */
-/* #undef AWS_HAVE_POSIX_LARGE_FILE_SUPPORT */
-/* #undef AWS_HAVE_EXECINFO */
-#define AWS_HAVE_WINAPI_DESKTOP
+#define AWS_HAVE_GCC_OVERFLOW_MATH_EXTENSIONS
+#define AWS_HAVE_GCC_INLINE_ASM
+/* #undef AWS_HAVE_MSVC_INTRINSICS_X64 */
+#define AWS_HAVE_POSIX_LARGE_FILE_SUPPORT
+#define AWS_HAVE_EXECINFO
+/* #undef AWS_HAVE_WINAPI_DESKTOP */
+#define AWS_HAVE_LINUX_IF_LINK_H
 
 #endif

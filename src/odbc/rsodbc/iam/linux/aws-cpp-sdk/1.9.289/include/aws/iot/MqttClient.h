@@ -7,6 +7,7 @@
 #include <aws/crt/Exports.h>
 #include <aws/crt/auth/Sigv4Signing.h>
 #include <aws/crt/mqtt/MqttClient.h>
+#include <aws/iot/MqttCommon.h>
 
 #if !BYO_CRYPTO
 
@@ -99,85 +100,6 @@ namespace Aws
             friend class MqttClientConnectionConfigBuilder;
         };
 
-        using CreateSigningConfig = std::function<std::shared_ptr<Crt::Auth::ISigningConfig>(void)>;
-
-        /**
-         * Class encapsulating configuration for establishing an Aws IoT mqtt connection via websockets
-         */
-        struct AWS_CRT_CPP_API WebsocketConfig
-        {
-            /**
-             * Create a websocket configuration for use with the default credentials provider chain. Signing region
-             * will be used for Sigv4 signature calculations.
-             *
-             * @param signingRegion Aws region that is being connected to.  Required in order to properly sign the
-             * handshake upgrade request
-             * @param bootstrap client bootstrap to establish any connections needed by the default credentials
-             * provider chain which will get built for the user
-             */
-            WebsocketConfig(
-                const Crt::String &signingRegion,
-                Crt::Io::ClientBootstrap *bootstrap,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
-
-            /**
-             * Create a websocket configuration for use with the default credentials provider chain and default
-             * ClientBootstrap. Signing region will be used for Sigv4 signature calculations.
-             *
-             * For more information on the default ClientBootstrap see
-             * Aws::Crt::ApiHandle::GetOrCreateDefaultClientBootstrap
-             *
-             * @param signingRegion Aws region that is being connected to.  Required in order to properly sign the
-             * handshake upgrade request
-             */
-            WebsocketConfig(const Crt::String &signingRegion, Crt::Allocator *allocator = Crt::g_allocator) noexcept;
-
-            /**
-             * Create a websocket configuration for use with a custom credentials provider. Signing region will be used
-             * for Sigv4 signature calculations.
-             *
-             * @param signingRegion Aws region that is being connected to.  Required in order to properly sign the
-             * handshake upgrade request
-             * @param credentialsProvider credentials provider to source AWS credentials from
-             */
-            WebsocketConfig(
-                const Crt::String &signingRegion,
-                const std::shared_ptr<Crt::Auth::ICredentialsProvider> &credentialsProvider,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
-
-            /**
-             * Create a websocket configuration for use with a custom credentials provider, and a custom signer.
-             *
-             * You'll need to provide a function for use with creating a signing Config and pass it to
-             * createSigningConfig.
-             *
-             * This is useful for cases use with:
-             * https://docs.aws.amazon.com/iot/latest/developerguide/custom-auth.html
-             *
-             * @param credentialsProvider
-             * @param signer
-             * @param createSigningConfig
-             */
-            WebsocketConfig(
-                const std::shared_ptr<Crt::Auth::ICredentialsProvider> &credentialsProvider,
-                const std::shared_ptr<Crt::Auth::IHttpRequestSigner> &signer,
-                CreateSigningConfig createSigningConfig) noexcept;
-
-            std::shared_ptr<Crt::Auth::ICredentialsProvider> CredentialsProvider;
-            std::shared_ptr<Crt::Auth::IHttpRequestSigner> Signer;
-            CreateSigningConfig CreateSigningConfigCb;
-
-            /**
-             * @deprecated Specify ProxyOptions to use a proxy with your websocket connection.
-             *
-             * If MqttClientConnectionConfigBuilder::m_proxyOptions is valid, then that will be used over
-             * this value.
-             */
-            Crt::Optional<Crt::Http::HttpClientConnectionProxyOptions> ProxyOptions;
-            Crt::String SigningRegion;
-            Crt::String ServiceName;
-        };
-
         /**
          * Represents configuration parameters for building a MqttClientConnectionConfig object. You can use a single
          * instance of this class PER MqttClientConnectionConfig you want to generate. If you want to generate a config
@@ -194,11 +116,12 @@ namespace Aws
              *
              * @param certPath path to the X509 certificate (pem file) to use
              * @param pkeyPath path to the private key (pem file) to use
+             * @param allocator memory allocator to use
              */
             MqttClientConnectionConfigBuilder(
                 const char *certPath,
                 const char *pkeyPath,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+                Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
 
             /**
              * Sets the builder up for MTLS using cert and pkey. These are in-memory buffers and must be in the PEM
@@ -206,20 +129,24 @@ namespace Aws
              *
              * @param cert buffer containing the X509 certificate in a PEM format
              * @param pkey buffer containing the private key in a PEM format
+             * @param allocator memory allocator to use
              */
             MqttClientConnectionConfigBuilder(
                 const Crt::ByteCursor &cert,
                 const Crt::ByteCursor &pkey,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+                Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
 
             /**
              * Sets the builder up for MTLS, using a PKCS#11 library for private key operations.
              *
              * NOTE: This only works on Unix devices.
+             *
+             * @param pkcs11Options PKCS#11 options
+             * @param allocator memory allocator to use
              */
             MqttClientConnectionConfigBuilder(
                 const Crt::Io::TlsContextPkcs11Options &pkcs11Options,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+                Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
 
             /**
              * Sets the builder up for MTLS, using a certificate in a Windows certificate store.
@@ -229,20 +156,28 @@ namespace Aws
              * @param windowsCertStorePath Path to certificate in a Windows certificate store.
              *    The path must use backslashes and end with the certificate's thumbprint.
              *    Example: `CurrentUser\MY\A11F8A9B5DF5B98BA3508FBCA575D09570E0D2C6`
-             * NOTE: This only works on Windows.
+             * @param allocator memory allocator to use
              */
             MqttClientConnectionConfigBuilder(
                 const char *windowsCertStorePath,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+                Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
 
             /**
              * Sets the builder up for Websocket connection.
              *
              * @param config websocket configuration information
+             * @param allocator memory allocator to use
              */
             MqttClientConnectionConfigBuilder(
                 const WebsocketConfig &config,
-                Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+                Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
+
+            /**
+             * Creates a new builder with default Tls options. This requires setting the connection details manually.
+             *
+             * @return a new builder with default Tls options
+             */
+            static MqttClientConnectionConfigBuilder NewDefaultBuilder() noexcept;
 
             /**
              * Sets endpoint to connect to.
@@ -388,6 +323,45 @@ namespace Aws
             MqttClientConnectionConfigBuilder &WithSdkVersion(const Crt::String &sdkVersion);
 
             /**
+             * Sets the custom authorizer settings. This function will modify the username, port, and TLS options.
+             *
+             * @param username The username to use with the custom authorizer. If an empty string is passed, it will
+             *                 check to see if a username has already been set (via WithUsername function). If no
+             *                 username is set then no username will be passed with the MQTT connection.
+             * @param authorizerName The name of the custom authorizer. If an empty string is passed, then
+             *                       'x-amz-customauthorizer-name' will not be added with the MQTT connection.
+             * @param authorizerSignature The signature of the custom authorizer. If an empty string is passed, then
+             *                            'x-amz-customauthorizer-signature' will not be added with the MQTT connection.
+             * @param password The password to use with the custom authorizer. If null is passed, then no password will
+             *                 be set.
+             *
+             * @return this builder object
+             */
+            MqttClientConnectionConfigBuilder &WithCustomAuthorizer(
+                const Crt::String &username,
+                const Crt::String &authorizerName,
+                const Crt::String &authorizerSignature,
+                const Crt::String &password) noexcept;
+
+            /**
+             * Sets username for the connection
+             *
+             * @param username the username that will be passed with the MQTT connection
+             *
+             * @return this builder object
+             */
+            MqttClientConnectionConfigBuilder &WithUsername(const Crt::String &username) noexcept;
+
+            /**
+             * Sets password for the connection
+             *
+             * @param password the password that will be passed with the MQTT connection
+             *
+             * @return this builder object
+             */
+            MqttClientConnectionConfigBuilder &WithPassword(const Crt::String &password) noexcept;
+
+            /**
              * Builds a client configuration object from the set options.
              *
              * @return a new client connection config instance
@@ -408,6 +382,12 @@ namespace Aws
             // Common setup shared by all valid constructors
             MqttClientConnectionConfigBuilder(Crt::Allocator *allocator) noexcept;
 
+            // Helper function to add parameters to the username in the WithCustomAuthorizer function
+            Crt::String AddToUsernameParameter(
+                Crt::String currentUsername,
+                Crt::String parameterValue,
+                Crt::String parameterPreText);
+
             Crt::Allocator *m_allocator;
             Crt::String m_endpoint;
             uint16_t m_portOverride;
@@ -417,7 +397,10 @@ namespace Aws
             Crt::Optional<Crt::Http::HttpClientConnectionProxyOptions> m_proxyOptions;
             bool m_enableMetricsCollection = true;
             Crt::String m_sdkName = "CPPv2";
-            Crt::String m_sdkVersion = AWS_CRT_CPP_VERSION;
+            Crt::String m_sdkVersion;
+            Crt::String m_username = "";
+            Crt::String m_password = "";
+            bool m_isUsingCustomAuthorizer = false;
 
             int m_lastError;
         };
@@ -430,7 +413,7 @@ namespace Aws
         class AWS_CRT_CPP_API MqttClient final
         {
           public:
-            MqttClient(Crt::Io::ClientBootstrap &bootstrap, Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+            MqttClient(Crt::Io::ClientBootstrap &bootstrap, Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
 
             /**
              * Constructs a new Mqtt Client object using the static default ClientBootstrap.
@@ -438,7 +421,7 @@ namespace Aws
              * For more information on the default ClientBootstrap see
              * Aws::Crt::ApiHandle::GetOrCreateDefaultClientBootstrap
              */
-            MqttClient(Crt::Allocator *allocator = Crt::g_allocator) noexcept;
+            MqttClient(Crt::Allocator *allocator = Crt::ApiAllocator()) noexcept;
 
             /**
              * Creates a new mqtt connection from a connection configuration object

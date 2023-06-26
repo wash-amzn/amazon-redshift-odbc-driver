@@ -36,15 +36,15 @@ namespace Model
    * href="http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/ScheduledAction">AWS
    * API Reference</a></p>
    */
-  class AWS_REDSHIFT_API ScheduledAction
+  class ScheduledAction
   {
   public:
-    ScheduledAction();
-    ScheduledAction(const Aws::Utils::Xml::XmlNode& xmlNode);
-    ScheduledAction& operator=(const Aws::Utils::Xml::XmlNode& xmlNode);
+    AWS_REDSHIFT_API ScheduledAction();
+    AWS_REDSHIFT_API ScheduledAction(const Aws::Utils::Xml::XmlNode& xmlNode);
+    AWS_REDSHIFT_API ScheduledAction& operator=(const Aws::Utils::Xml::XmlNode& xmlNode);
 
-    void OutputToStream(Aws::OStream& ostream, const char* location, unsigned index, const char* locationValue) const;
-    void OutputToStream(Aws::OStream& oStream, const char* location) const;
+    AWS_REDSHIFT_API void OutputToStream(Aws::OStream& ostream, const char* location, unsigned index, const char* locationValue) const;
+    AWS_REDSHIFT_API void OutputToStream(Aws::OStream& oStream, const char* location) const;
 
 
     /**
@@ -530,13 +530,10 @@ namespace Model
     inline const ResponseMetadata& GetResponseMetadata() const{ return m_responseMetadata; }
 
     
-    inline bool ResponseMetadataHasBeenSet() const { return m_responseMetadataHasBeenSet; }
+    inline void SetResponseMetadata(const ResponseMetadata& value) { m_responseMetadata = value; }
 
     
-    inline void SetResponseMetadata(const ResponseMetadata& value) { m_responseMetadataHasBeenSet = true; m_responseMetadata = value; }
-
-    
-    inline void SetResponseMetadata(ResponseMetadata&& value) { m_responseMetadataHasBeenSet = true; m_responseMetadata = std::move(value); }
+    inline void SetResponseMetadata(ResponseMetadata&& value) { m_responseMetadata = std::move(value); }
 
     
     inline ScheduledAction& WithResponseMetadata(const ResponseMetadata& value) { SetResponseMetadata(value); return *this;}
@@ -547,34 +544,33 @@ namespace Model
   private:
 
     Aws::String m_scheduledActionName;
-    bool m_scheduledActionNameHasBeenSet;
+    bool m_scheduledActionNameHasBeenSet = false;
 
     ScheduledActionType m_targetAction;
-    bool m_targetActionHasBeenSet;
+    bool m_targetActionHasBeenSet = false;
 
     Aws::String m_schedule;
-    bool m_scheduleHasBeenSet;
+    bool m_scheduleHasBeenSet = false;
 
     Aws::String m_iamRole;
-    bool m_iamRoleHasBeenSet;
+    bool m_iamRoleHasBeenSet = false;
 
     Aws::String m_scheduledActionDescription;
-    bool m_scheduledActionDescriptionHasBeenSet;
+    bool m_scheduledActionDescriptionHasBeenSet = false;
 
     ScheduledActionState m_state;
-    bool m_stateHasBeenSet;
+    bool m_stateHasBeenSet = false;
 
     Aws::Vector<Aws::Utils::DateTime> m_nextInvocations;
-    bool m_nextInvocationsHasBeenSet;
+    bool m_nextInvocationsHasBeenSet = false;
 
     Aws::Utils::DateTime m_startTime;
-    bool m_startTimeHasBeenSet;
+    bool m_startTimeHasBeenSet = false;
 
     Aws::Utils::DateTime m_endTime;
-    bool m_endTimeHasBeenSet;
+    bool m_endTimeHasBeenSet = false;
 
     ResponseMetadata m_responseMetadata;
-    bool m_responseMetadataHasBeenSet;
   };
 
 } // namespace Model

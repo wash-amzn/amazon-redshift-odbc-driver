@@ -34,13 +34,13 @@ namespace Model
    * href="http://docs.aws.amazon.com/goto/WebAPI/redshift-serverless-2021-04-21/Workgroup">AWS
    * API Reference</a></p>
    */
-  class AWS_REDSHIFTSERVERLESS_API Workgroup
+  class Workgroup
   {
   public:
-    Workgroup();
-    Workgroup(Aws::Utils::Json::JsonView jsonValue);
-    Workgroup& operator=(Aws::Utils::Json::JsonView jsonValue);
-    Aws::Utils::Json::JsonValue Jsonize() const;
+    AWS_REDSHIFTSERVERLESS_API Workgroup();
+    AWS_REDSHIFTSERVERLESS_API Workgroup(Aws::Utils::Json::JsonView jsonValue);
+    AWS_REDSHIFTSERVERLESS_API Workgroup& operator=(Aws::Utils::Json::JsonView jsonValue);
+    AWS_REDSHIFTSERVERLESS_API Aws::Utils::Json::JsonValue Jsonize() const;
 
 
     /**
@@ -69,66 +69,106 @@ namespace Model
 
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline const Aws::Vector<ConfigParameter>& GetConfigParameters() const{ return m_configParameters; }
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline bool ConfigParametersHasBeenSet() const { return m_configParametersHasBeenSet; }
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline void SetConfigParameters(const Aws::Vector<ConfigParameter>& value) { m_configParametersHasBeenSet = true; m_configParameters = value; }
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline void SetConfigParameters(Aws::Vector<ConfigParameter>&& value) { m_configParametersHasBeenSet = true; m_configParameters = std::move(value); }
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline Workgroup& WithConfigParameters(const Aws::Vector<ConfigParameter>& value) { SetConfigParameters(value); return *this;}
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline Workgroup& WithConfigParameters(Aws::Vector<ConfigParameter>&& value) { SetConfigParameters(std::move(value)); return *this;}
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline Workgroup& AddConfigParameters(const ConfigParameter& value) { m_configParametersHasBeenSet = true; m_configParameters.push_back(value); return *this; }
 
     /**
-     * <p>An array of parameters to set for finer control over a database. The options
-     * are <code>datestyle</code>, <code>enable_user_activity_logging</code>,
-     * <code>query_group</code>, <code>search_path</code>, and
-     * <code>max_query_execution_time</code>.</p>
+     * <p>An array of parameters to set for advanced control over a database. The
+     * options are <code>auto_mv</code>, <code>datestyle</code>,
+     * <code>enable_case_sensitivity_identifier</code>,
+     * <code>enable_user_activity_logging</code>, <code>query_group</code>, ,
+     * <code>search_path</code>, and query monitoring metrics that let you define
+     * performance boundaries. For more information about query monitoring rules and
+     * available metrics, see <a
+     * href="https://docs.aws.amazon.com/redshift/latest/dg/cm-c-wlm-query-monitoring-rules.html#cm-c-wlm-query-monitoring-metrics-serverless">
+     * Query monitoring metrics for Amazon Redshift Serverless</a>.</p>
      */
     inline Workgroup& AddConfigParameters(ConfigParameter&& value) { m_configParametersHasBeenSet = true; m_configParameters.push_back(std::move(value)); return *this; }
 
@@ -263,6 +303,31 @@ namespace Model
      * <p>The namespace the workgroup is associated with.</p>
      */
     inline Workgroup& WithNamespaceName(const char* value) { SetNamespaceName(value); return *this;}
+
+
+    /**
+     * <p>The custom port to use when connecting to a workgroup. Valid port ranges are
+     * 5431-5455 and 8191-8215. The default is 5439.</p>
+     */
+    inline int GetPort() const{ return m_port; }
+
+    /**
+     * <p>The custom port to use when connecting to a workgroup. Valid port ranges are
+     * 5431-5455 and 8191-8215. The default is 5439.</p>
+     */
+    inline bool PortHasBeenSet() const { return m_portHasBeenSet; }
+
+    /**
+     * <p>The custom port to use when connecting to a workgroup. Valid port ranges are
+     * 5431-5455 and 8191-8215. The default is 5439.</p>
+     */
+    inline void SetPort(int value) { m_portHasBeenSet = true; m_port = value; }
+
+    /**
+     * <p>The custom port to use when connecting to a workgroup. Valid port ranges are
+     * 5431-5455 and 8191-8215. The default is 5439.</p>
+     */
+    inline Workgroup& WithPort(int value) { SetPort(value); return *this;}
 
 
     /**
@@ -538,43 +603,46 @@ namespace Model
   private:
 
     int m_baseCapacity;
-    bool m_baseCapacityHasBeenSet;
+    bool m_baseCapacityHasBeenSet = false;
 
     Aws::Vector<ConfigParameter> m_configParameters;
-    bool m_configParametersHasBeenSet;
+    bool m_configParametersHasBeenSet = false;
 
     Aws::Utils::DateTime m_creationDate;
-    bool m_creationDateHasBeenSet;
+    bool m_creationDateHasBeenSet = false;
 
     Endpoint m_endpoint;
-    bool m_endpointHasBeenSet;
+    bool m_endpointHasBeenSet = false;
 
     bool m_enhancedVpcRouting;
-    bool m_enhancedVpcRoutingHasBeenSet;
+    bool m_enhancedVpcRoutingHasBeenSet = false;
 
     Aws::String m_namespaceName;
-    bool m_namespaceNameHasBeenSet;
+    bool m_namespaceNameHasBeenSet = false;
+
+    int m_port;
+    bool m_portHasBeenSet = false;
 
     bool m_publiclyAccessible;
-    bool m_publiclyAccessibleHasBeenSet;
+    bool m_publiclyAccessibleHasBeenSet = false;
 
     Aws::Vector<Aws::String> m_securityGroupIds;
-    bool m_securityGroupIdsHasBeenSet;
+    bool m_securityGroupIdsHasBeenSet = false;
 
     WorkgroupStatus m_status;
-    bool m_statusHasBeenSet;
+    bool m_statusHasBeenSet = false;
 
     Aws::Vector<Aws::String> m_subnetIds;
-    bool m_subnetIdsHasBeenSet;
+    bool m_subnetIdsHasBeenSet = false;
 
     Aws::String m_workgroupArn;
-    bool m_workgroupArnHasBeenSet;
+    bool m_workgroupArnHasBeenSet = false;
 
     Aws::String m_workgroupId;
-    bool m_workgroupIdHasBeenSet;
+    bool m_workgroupIdHasBeenSet = false;
 
     Aws::String m_workgroupName;
-    bool m_workgroupNameHasBeenSet;
+    bool m_workgroupNameHasBeenSet = false;
   };
 
 } // namespace Model

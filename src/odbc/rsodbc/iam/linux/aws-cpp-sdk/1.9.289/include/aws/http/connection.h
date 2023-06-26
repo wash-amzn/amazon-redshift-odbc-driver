@@ -256,7 +256,7 @@ struct aws_http_client_connection_options {
 
     /**
      * Required.
-     * Must outlive the connection.
+     * The connection keeps the bootstrap alive via ref-counting.
      */
     struct aws_client_bootstrap *bootstrap;
 
@@ -279,8 +279,8 @@ struct aws_http_client_connection_options {
 
     /**
      * Optional.
-     * aws_http_client_connect() deep-copies all contents except the `aws_tls_ctx`,
-     * which must outlive the the connection.
+     * aws_http_client_connect() deep-copies all contents,
+     * and keeps `aws_tls_ctx` alive via ref-counting.
      */
     const struct aws_tls_connection_options *tls_options;
 
@@ -391,6 +391,19 @@ struct aws_http_client_connection_options {
      * If connection is HTTP/2 and options were not specified, default values are used.
      */
     const struct aws_http2_connection_options *http2_options;
+
+    /**
+     * Optional.
+     * Requests the channel/connection be bound to a specific event loop rather than chosen sequentially from the
+     * event loop group associated with the client bootstrap.
+     */
+    struct aws_event_loop *requested_event_loop;
+
+    /**
+     * Optional
+     * Host resolution override that allows the user to override DNS behavior for this particular connection.
+     */
+    const struct aws_host_resolution_config *host_resolution_config;
 };
 
 /* Predefined settings identifiers (RFC-7540 6.5.2) */
@@ -462,6 +475,13 @@ void aws_http_connection_release(struct aws_http_connection *connection);
  */
 AWS_HTTP_API
 void aws_http_connection_close(struct aws_http_connection *connection);
+
+/**
+ * Stop accepting new requests for the connection. It will NOT start the shutdown process for the connection. The
+ * requests that are already open can still wait to be completed, but new requests will fail to be created,
+ */
+AWS_HTTP_API
+void aws_http_connection_stop_new_requests(struct aws_http_connection *connection);
 
 /**
  * Returns true unless the connection is closed or closing.
@@ -597,7 +617,7 @@ void aws_http2_connection_get_remote_settings(
  */
 
 AWS_HTTP_API
-int aws_http2_connection_send_goaway(
+void aws_http2_connection_send_goaway(
     struct aws_http_connection *http2_connection,
     uint32_t http2_error,
     bool allow_more_streams,

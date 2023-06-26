@@ -5,6 +5,7 @@
  */
 
 #include <aws/crt/Exports.h>
+#include <aws/crt/RefCounted.h>
 #include <aws/crt/Types.h>
 #include <aws/io/stream.h>
 
@@ -35,7 +36,8 @@ namespace Aws
              * aws_input_stream interface. To use, create a subclass of InputStream and define the abstract
              * functions.
              */
-            class AWS_CRT_CPP_API InputStream
+            class AWS_CRT_CPP_API InputStream : public std::enable_shared_from_this<InputStream>,
+                                                public RefCounted<InputStream>
             {
               public:
                 virtual ~InputStream();
@@ -97,15 +99,18 @@ namespace Aws
                 Allocator *m_allocator;
                 aws_input_stream m_underlying_stream;
 
-                InputStream(Aws::Crt::Allocator *allocator = g_allocator);
+                InputStream(Aws::Crt::Allocator *allocator = ApiAllocator());
 
                 /***
                  * Read up-to buffer::capacity - buffer::len into buffer::buffer
                  * Increment buffer::len by the amount you read in.
                  *
-                 * @return true on success, false otherwise. Return false, when there is nothing left to read.
-                 * You SHOULD raise an error via aws_raise_error()
-                 * if an actual failure condition occurs.
+                 * @return true if nothing went wrong.
+                 * Return true even if you read 0 bytes because the end-of-file has been reached.
+                 * Return true even if you read 0 bytes because data is not currently available.
+                 *
+                 * Return false if an actual failure condition occurs,
+                 * you SHOULD also raise an error via aws_raise_error().
                  */
                 virtual bool ReadImpl(ByteBuf &buffer) noexcept = 0;
 
@@ -136,7 +141,8 @@ namespace Aws
                 static int s_Read(aws_input_stream *stream, aws_byte_buf *dest);
                 static int s_GetStatus(aws_input_stream *stream, aws_stream_status *status);
                 static int s_GetLength(struct aws_input_stream *stream, int64_t *out_length);
-                static void s_Destroy(struct aws_input_stream *stream);
+                static void s_Acquire(aws_input_stream *stream);
+                static void s_Release(aws_input_stream *stream);
 
                 static aws_input_stream_vtable s_vtable;
             };
@@ -149,7 +155,7 @@ namespace Aws
               public:
                 StdIOStreamInputStream(
                     std::shared_ptr<Aws::Crt::Io::IStream> stream,
-                    Aws::Crt::Allocator *allocator = g_allocator) noexcept;
+                    Aws::Crt::Allocator *allocator = ApiAllocator()) noexcept;
 
                 bool IsValid() const noexcept override;
 

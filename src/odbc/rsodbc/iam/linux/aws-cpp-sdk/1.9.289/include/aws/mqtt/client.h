@@ -25,6 +25,12 @@ struct aws_http_proxy_options;
 struct aws_socket_options;
 struct aws_tls_connection_options;
 
+/**
+ * Empty struct that is passed when on_connection_closed is called.
+ * Currently holds nothing but will allow expanding in the future should it be needed.
+ */
+struct on_connection_closed_data;
+
 struct aws_mqtt_client {
     struct aws_allocator *allocator;
     struct aws_client_bootstrap *bootstrap;
@@ -61,6 +67,16 @@ typedef void(aws_mqtt_client_on_connection_complete_fn)(
 typedef void(aws_mqtt_client_on_connection_interrupted_fn)(
     struct aws_mqtt_client_connection *connection,
     int error_code,
+    void *userdata);
+
+/**
+ * Called if the connection to the server is closed by user request
+ * Note: Currently the "data" argument is always NULL, but this may change in the future if additional data is needed to
+ * be sent.
+ */
+typedef void(aws_mqtt_client_on_connection_closed_fn)(
+    struct aws_mqtt_client_connection *connection,
+    struct on_connection_closed_data *data,
     void *userdata);
 
 /**
@@ -157,7 +173,6 @@ typedef void(aws_mqtt_transform_websocket_handshake_fn)(
  * Called each time a valid websocket connection is established.
  *
  * All required headers have been checked already (ex: "Sec-Websocket-Accept"),
- * but optional headers have not (Ex: "Sec-Websocket-Protocol").
  *
  * Return AWS_OP_SUCCESS to accept the connection or AWS_OP_ERR to stop the connection attempt.
  */
@@ -220,6 +235,35 @@ struct aws_mqtt_connection_options {
     aws_mqtt_client_on_connection_complete_fn *on_connection_complete;
     void *user_data;
     bool clean_session;
+};
+
+/**
+ * Contains some simple statistics about the current state of the connection's queue of operations
+ */
+struct aws_mqtt_connection_operation_statistics {
+    /**
+     * total number of operations submitted to the connection that have not yet been completed.  Unacked operations
+     * are a subset of this.
+     */
+    uint64_t incomplete_operation_count;
+
+    /**
+     * total packet size of operations submitted to the connection that have not yet been completed.  Unacked operations
+     * are a subset of this.
+     */
+    uint64_t incomplete_operation_size;
+
+    /**
+     * total number of operations that have been sent to the server and are waiting for a corresponding ACK before
+     * they can be completed.
+     */
+    uint64_t unacked_operation_count;
+
+    /**
+     * total packet size of operations that have been sent to the server and are waiting for a corresponding ACK before
+     * they can be completed.
+     */
+    uint64_t unacked_operation_size;
 };
 
 AWS_EXTERN_C_BEGIN
@@ -343,6 +387,14 @@ int aws_mqtt_client_connection_set_http_proxy_options(
     struct aws_http_proxy_options *proxy_options);
 
 /**
+ * Set host resolution ooptions for the connection.
+ */
+AWS_MQTT_API
+int aws_mqtt_client_connection_set_host_resolution_options(
+    struct aws_mqtt_client_connection *connection,
+    struct aws_host_resolution_config *host_resolution_config);
+
+/**
  * Sets the minimum and maximum reconnect timeouts.
  *
  * The time between reconnect attempts will start at min and multiply by 2 until max is reached.
@@ -374,6 +426,21 @@ int aws_mqtt_client_connection_set_connection_interruption_handlers(
     void *on_interrupted_ud,
     aws_mqtt_client_on_connection_resumed_fn *on_resumed,
     void *on_resumed_ud);
+
+/**
+ * Sets the callback to call when the connection is closed normally by user request.
+ * This is different than the connection interrupted or lost, this only covers successful
+ * closure.
+ *
+ * \param[in] connection        The connection object
+ * \param[in] on_closed         The function to call when a connection is closed
+ * \param[in] on_closed_ud      Userdata for on_closed
+ */
+AWS_MQTT_API
+int aws_mqtt_client_connection_set_connection_closed_handler(
+    struct aws_mqtt_client_connection *connection,
+    aws_mqtt_client_on_connection_closed_fn *on_closed,
+    void *on_closed_ud);
 
 /**
  * Sets the callback to call whenever ANY publish packet is received. Only safe to set when connection is not connected.
@@ -571,6 +638,17 @@ uint16_t aws_mqtt_client_connection_publish(
     const struct aws_byte_cursor *payload,
     aws_mqtt_op_complete_fn *on_complete,
     void *userdata);
+
+/**
+ * Queries the connection's internal statistics for incomplete/unacked operations.
+ * \param connection connection to get statistics for
+ * \param stats set of incomplete/unacked operation statistics
+ * \returns AWS_OP_SUCCESS if getting the operation statistics were successful, AWS_OP_ERR otherwise
+ */
+AWS_MQTT_API
+int aws_mqtt_client_connection_get_stats(
+    struct aws_mqtt_client_connection *connection,
+    struct aws_mqtt_connection_operation_statistics *stats);
 
 AWS_EXTERN_C_END
 

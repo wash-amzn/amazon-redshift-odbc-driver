@@ -6,6 +6,7 @@
 #include <aws/crt/Types.h>
 #include <aws/crt/crypto/HMAC.h>
 #include <aws/crt/crypto/Hash.h>
+#include <aws/crt/mqtt/Mqtt5Client.h>
 #include <aws/crt/mqtt/MqttClient.h>
 
 #include <aws/common/logging.h>
@@ -46,6 +47,10 @@ namespace Aws
         class AWS_CRT_CPP_API ApiHandle
         {
           public:
+            /**
+             * Customize the ApiAllocator(), which is be used by any objects
+             * constructed without an explicit allocator.
+             */
             ApiHandle(Allocator *allocator) noexcept;
             ApiHandle() noexcept;
             ~ApiHandle();
@@ -72,7 +77,7 @@ namespace Aws
 
             /**
              * Configures the shutdown behavior of the api handle instance
-             * @param shutdownBehavior desired shutdown behavior
+             * @param behavior desired shutdown behavior
              */
             void SetShutdownBehavior(ApiHandleShutdownBehavior behavior);
 

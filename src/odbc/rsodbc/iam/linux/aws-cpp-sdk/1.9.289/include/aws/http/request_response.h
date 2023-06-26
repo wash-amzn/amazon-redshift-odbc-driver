@@ -182,10 +182,17 @@ typedef int(
 typedef int(aws_http_on_incoming_request_done_fn)(struct aws_http_stream *stream, void *user_data);
 
 /**
- * Invoked when request/response stream is complete, whether successful or unsuccessful
- * This is always invoked on the HTTP connection's event-loop thread.
+ * Invoked when request/response stream is completely destroyed.
+ * This may be invoked synchronously when aws_http_stream_release() is called.
+ * This is invoked even if the stream is never activated.
  */
 typedef void(aws_http_on_stream_complete_fn)(struct aws_http_stream *stream, int error_code, void *user_data);
+
+/**
+ * Invoked when request/response stream destroy completely.
+ * This can be invoked within the same thead who release the refcount on http stream.
+ */
+typedef void(aws_http_on_stream_destroy_fn)(void *user_data);
 
 /**
  * Options for creating a stream which sends a request from the client and receives a response from the server.
@@ -200,7 +207,7 @@ struct aws_http_make_request_options {
     /**
      * Definition for outgoing request.
      * Required.
-     * This object must stay alive at least until on_complete is called.
+     * The request will be kept alive via refcounting until the request completes.
      */
     struct aws_http_message *request;
 
@@ -233,6 +240,15 @@ struct aws_http_make_request_options {
      * See `aws_http_on_stream_complete_fn`.
      */
     aws_http_on_stream_complete_fn *on_complete;
+
+    /* Callback for when the request/response stream is completely destroyed. */
+    aws_http_on_stream_destroy_fn *on_destroy;
+
+    /**
+     * When using HTTP/2, request body data will be provided over time. The stream will only be polled for writing
+     * when data has been supplied via `aws_http2_stream_write_data`
+     */
+    bool http2_use_manual_data_writes;
 };
 
 struct aws_http_request_handler_options {
@@ -284,7 +300,25 @@ struct aws_http_request_handler_options {
      * See `aws_http_on_stream_complete_fn`.
      */
     aws_http_on_stream_complete_fn *on_complete;
+
+    /* Callback for when the request/response stream is completely destroyed. */
+    aws_http_on_stream_destroy_fn *on_destroy;
 };
+
+/**
+ * Invoked when the data stream of an outgoing HTTP write operation is no longer in use.
+ * This is always invoked on the HTTP connection's event-loop thread.
+ *
+ * @param stream        HTTP-stream this write operation was submitted to.
+ * @param error_code    If error_code is AWS_ERROR_SUCCESS (0), the data was successfully sent.
+ *                      Any other error_code indicates that the HTTP-stream is in the process of terminating.
+ *                      If the error_code is AWS_ERROR_HTTP_STREAM_HAS_COMPLETED,
+ *                      the stream's termination has nothing to do with this write operation.
+ *                      Any other non-zero error code indicates a problem with this particular write
+ *                      operation's data.
+ * @param user_data     User data for this write operation.
+ */
+typedef void aws_http_stream_write_complete_fn(struct aws_http_stream *stream, int error_code, void *user_data);
 
 /**
  * Invoked when the data of an outgoing HTTP/1.1 chunk is no longer in use.
@@ -298,7 +332,7 @@ struct aws_http_request_handler_options {
  *                      Any other non-zero error code indicates a problem with this particular chunk's data.
  * @param user_data     User data for this chunk.
  */
-typedef void aws_http1_stream_write_chunk_complete_fn(struct aws_http_stream *stream, int error_code, void *user_data);
+typedef aws_http_stream_write_complete_fn aws_http1_stream_write_chunk_complete_fn;
 
 /**
  * HTTP/1.1 chunk extension for chunked encoding.
@@ -349,6 +383,50 @@ struct aws_http1_chunk_options {
      * See `aws_http1_stream_write_chunk_complete_fn`.
      */
     aws_http1_stream_write_chunk_complete_fn *on_complete;
+
+    /**
+     * User provided data passed to the on_complete callback on its invocation.
+     */
+    void *user_data;
+};
+
+/**
+ * Invoked when the data of an outgoing HTTP2 data frame is no longer in use.
+ * This is always invoked on the HTTP connection's event-loop thread.
+ *
+ * @param stream        HTTP2-stream this write was submitted to.
+ * @param error_code    If error_code is AWS_ERROR_SUCCESS (0), the data was successfully sent.
+ *                      Any other error_code indicates that the HTTP-stream is in the process of terminating.
+ *                      If the error_code is AWS_ERROR_HTTP_STREAM_HAS_COMPLETED,
+ *                      the stream's termination has nothing to do with this write.
+ *                      Any other non-zero error code indicates a problem with this particular write's data.
+ * @param user_data     User data for this write.
+ */
+typedef aws_http_stream_write_complete_fn aws_http2_stream_write_data_complete_fn;
+
+/**
+ * Encoding options for manual H2 data frame writes
+ */
+struct aws_http2_stream_write_data_options {
+    /**
+     * The data to be sent.
+     * Optional.
+     * If not set, input stream with length 0 will be used.
+     */
+    struct aws_input_stream *data;
+
+    /**
+     * Set true when it's the last chunk to be sent.
+     * After a write with end_stream, no more data write will be accepted.
+     */
+    bool end_stream;
+
+    /**
+     * Invoked when the data stream is no longer in use, whether or not it was successfully sent.
+     * Optional.
+     * See `aws_http2_stream_write_data_complete_fn`.
+     */
+    aws_http2_stream_write_data_complete_fn *on_complete;
 
     /**
      * User provided data passed to the on_complete callback on its invocation.
@@ -448,6 +526,15 @@ int aws_http_headers_get_index(
     const struct aws_http_headers *headers,
     size_t index,
     struct aws_http_header *out_header);
+
+/**
+ *
+ * Get all values with this name, combined into one new aws_string that you are responsible for destroying.
+ * If there are multiple headers with this name, their values are appended with comma-separators.
+ * If there are no headers with this name, NULL is returned and AWS_ERROR_HTTP_HEADER_NOT_FOUND is raised.
+ */
+AWS_HTTP_API
+struct aws_string *aws_http_headers_get_all(const struct aws_http_headers *headers, struct aws_byte_cursor name);
 
 /**
  * Get the first value for this name, ignoring any additional values.
@@ -613,6 +700,19 @@ AWS_HTTP_API
 struct aws_http_message *aws_http2_message_new_response(struct aws_allocator *allocator);
 
 /**
+ * Create an HTTP/2 message from HTTP/1.1 message.
+ * pseudo headers will be created from the context and added to the headers of new message.
+ * Normal headers will be copied to the headers of new message.
+ * Note:
+ *  - if `host` exist, it will be removed and `:authority` will be added using the information.
+ *  - `:scheme` always defaults to "https". To use a different scheme create the HTTP/2 message directly
+ */
+AWS_HTTP_API
+struct aws_http_message *aws_http2_message_new_from_http1(
+    struct aws_allocator *alloc,
+    const struct aws_http_message *http1_msg);
+
+/**
  * Acquire a hold on the object, preventing it from being deleted until
  * aws_http_message_release() is called by all those with a hold on it.
  *
@@ -729,8 +829,36 @@ AWS_HTTP_API int aws_http1_stream_write_chunk(
     const struct aws_http1_chunk_options *options);
 
 /**
+ * The stream must have specified `http2_use_manual_data_writes` during request creation.
+ * For client streams, activate() must be called before any frames are submitted.
+ * For server streams, the response headers must be submitted before any frames.
+ * A write with options that has end_stream set to be true will end the stream and prevent any further write.
+ *
+ * @return AWS_OP_SUCCESS if the write was queued
+ *         AWS_OP_ERROR indicating the attempt raised an error code.
+ *              AWS_ERROR_INVALID_STATE will be raised for invalid usage.
+ *              AWS_ERROR_HTTP_STREAM_HAS_COMPLETED will be raised if the stream ended for reasons behind the scenes.
+ *
+ * Typical usage will be something like:
+ * options.http2_use_manual_data_writes = true;
+ * stream = aws_http_connection_make_request(connection, &options);
+ * aws_http_stream_activate(stream);
+ * ...
+ * struct aws_http2_stream_write_data_options write;
+ * aws_http2_stream_write_data(stream, &write);
+ * ...
+ * struct aws_http2_stream_write_data_options last_write;
+ * last_write.end_stream = true;
+ * aws_http2_stream_write_data(stream, &write);
+ * ...
+ * aws_http_stream_release(stream);
+ */
+AWS_HTTP_API int aws_http2_stream_write_data(
+    struct aws_http_stream *http2_stream,
+    const struct aws_http2_stream_write_data_options *options);
+
+/**
  * Add a list of headers to be added as trailing headers sent after the last chunk is sent.
- * The stream must have specified "chunked" in a "transfer-encoding" header. The stream should also have
  * a "Trailer" header field which indicates the fields present in the trailer.
  *
  * Certain headers are forbidden in the trailer (e.g., Transfer-Encoding, Content-Length, Host). See RFC-7541
@@ -750,13 +878,12 @@ AWS_HTTP_API int aws_http1_stream_add_chunked_trailer(
     const struct aws_http_headers *trailing_headers);
 
 /**
- * Get the message's aws_http_headers.
  *
  * This datastructure has more functions for inspecting and modifying headers than
  * are available on the aws_http_message datastructure.
  */
 AWS_HTTP_API
-struct aws_http_headers *aws_http_message_get_headers(struct aws_http_message *message);
+struct aws_http_headers *aws_http_message_get_headers(const struct aws_http_message *message);
 
 /**
  * Get the message's const aws_http_headers.
@@ -822,6 +949,14 @@ int aws_http_message_erase_header(struct aws_http_message *message, size_t index
  *
  * Tip for language bindings: Do not bind the `options` struct. Use something more natural for your language,
  * such as Builder Pattern in Java, or Python's ability to take many optional arguments by name.
+ *
+ * Note: The header of the request will be sent as it is when the message to send protocol matches the protocol of the
+ * connection.
+ *  - No `user-agent` will be added.
+ *  - No security check will be enforced. eg: `referer` header privacy should be enforced by the user-agent who adds the
+ *      header
+ *  - When HTTP/1 message sent on HTTP/2 connection, `aws_http2_message_new_from_http1` will be applied under the hood.
+ *  - When HTTP/2 message sent on HTTP/1 connection, no change will be made.
  */
 AWS_HTTP_API
 struct aws_http_stream *aws_http_connection_make_request(

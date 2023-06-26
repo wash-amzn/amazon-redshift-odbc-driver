@@ -25,6 +25,25 @@ typedef void(aws_http_connection_manager_on_connection_setup_fn)(
 
 typedef void(aws_http_connection_manager_shutdown_complete_fn)(void *user_data);
 
+/**
+ * Metrics for logging and debugging purpose.
+ */
+struct aws_http_manager_metrics {
+    /**
+     * The number of additional concurrent requests that can be supported by the HTTP manager without needing to
+     * establish additional connections to the target server.
+     *
+     * For connection manager, it equals to connections that's idle.
+     * For stream manager, it equals to the number of streams that are possible to be made without creating new
+     * connection, although the implementation can create new connection without fully filling it.
+     */
+    size_t available_concurrency;
+    /* The number of requests that are awaiting concurrency to be made available from the HTTP manager. */
+    size_t pending_concurrency_acquires;
+    /* The number of connections (http/1.1) or streams (for h2 via. stream manager) currently vended to user. */
+    size_t leased_concurrency;
+};
+
 /*
  * Connection manager configuration struct.
  *
@@ -38,17 +57,34 @@ struct aws_http_connection_manager_options {
     struct aws_client_bootstrap *bootstrap;
     size_t initial_window_size;
     const struct aws_socket_options *socket_options;
+
+    /**
+     * Options to create secure (HTTPS) connections.
+     * For secure connections, set "h2" in the ALPN string for HTTP/2, otherwise HTTP/1.1 is used.
+     *
+     * Leave NULL to create cleartext (HTTP) connections.
+     * For cleartext connections, use `http2_prior_knowledge` (RFC-7540 3.4)
+     * to control whether that are treated as HTTP/1.1 or HTTP/2.
+     */
     const struct aws_tls_connection_options *tls_connection_options;
+
+    /**
+     * Specify whether you have prior knowledge that cleartext (HTTP) connections are HTTP/2 (RFC-7540 3.4).
+     * If false, then cleartext connections are treated as HTTP/1.1.
+     * It is illegal to set this true when secure connections are being used.
+     * Note that upgrading from HTTP/1.1 to HTTP/2 is not supported (RFC-7540 3.2).
+     */
+    bool http2_prior_knowledge;
+
     const struct aws_http_connection_monitoring_options *monitoring_options;
     struct aws_byte_cursor host;
     uint16_t port;
-    bool prior_knowledge_http2;
 
     /**
      * Optional.
      * HTTP/2 specific configuration. Check `struct aws_http2_connection_options` for details of each config
      */
-    struct aws_http2_setting *initial_settings_array;
+    const struct aws_http2_setting *initial_settings_array;
     size_t num_initial_settings;
     size_t max_closed_streams;
     bool http2_conn_manual_window_management;
@@ -116,7 +152,7 @@ void aws_http_connection_manager_release(struct aws_http_connection_manager *man
 AWS_HTTP_API
 struct aws_http_connection_manager *aws_http_connection_manager_new(
     struct aws_allocator *allocator,
-    struct aws_http_connection_manager_options *options);
+    const struct aws_http_connection_manager_options *options);
 
 /*
  * Requests a connection from the manager.  The requester is notified of
@@ -137,11 +173,21 @@ void aws_http_connection_manager_acquire_connection(
 /*
  * Returns a connection back to the manager.  All acquired connections must
  * eventually be released back to the manager in order to avoid a resource leak.
+ *
+ * Note: it can lead to another acquired callback to be invoked within the thread.
  */
 AWS_HTTP_API
 int aws_http_connection_manager_release_connection(
     struct aws_http_connection_manager *manager,
     struct aws_http_connection *connection);
+
+/**
+ * Fetch the current manager metrics from connection manager.
+ */
+AWS_HTTP_API
+void aws_http_connection_manager_fetch_metrics(
+    const struct aws_http_connection_manager *manager,
+    struct aws_http_manager_metrics *out_metrics);
 
 AWS_EXTERN_C_END
 

@@ -105,6 +105,11 @@ namespace Aws
             NETWORK_CONNECT_TIMEOUT = 599
         };
 
+        /**
+         * Overload ostream operator<< for HttpResponseCode enum class for a prettier output such as "200"
+         */
+        AWS_CORE_API Aws::OStream& operator<< (Aws::OStream& oStream, HttpResponseCode code);
+
         inline bool IsRetryableHttpResponseCode(HttpResponseCode responseCode)
         {
             switch (responseCode)
@@ -137,7 +142,8 @@ namespace Aws
             HttpResponse(const std::shared_ptr<const HttpRequest>& originatingRequest) :
                 m_httpRequest(originatingRequest),
                 m_responseCode(HttpResponseCode::REQUEST_NOT_MADE),
-                m_hasClientError(false)
+                m_hasClientError(false),
+                m_clientErrorType(Aws::Client::CoreErrors::OK)
             {}
 
             virtual ~HttpResponse() = default;
@@ -189,6 +195,14 @@ namespace Aws
              * Adds a header to the http response object.
              */
             virtual void AddHeader(const Aws::String&, const Aws::String&) = 0;
+            /**
+              * Add a header to the http response object, and move the value.
+              * The name can't be moved as it is converted to lower-case.
+              *
+              * It isn't pure virtual for backwards compatiblity reasons, but the StandardHttpResponse used by default in the SDK
+              * implements the move.
+              */
+            virtual void AddHeader(const Aws::String& headerName, Aws::String&& headerValue) { AddHeader(headerName, headerValue); };
             /**
              * Sets the content type header on the http response object.
              */

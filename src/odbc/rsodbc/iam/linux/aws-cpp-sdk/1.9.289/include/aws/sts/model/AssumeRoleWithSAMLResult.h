@@ -34,12 +34,12 @@ namespace Model
    * href="http://docs.aws.amazon.com/goto/WebAPI/sts-2011-06-15/AssumeRoleWithSAMLResponse">AWS
    * API Reference</a></p>
    */
-  class AWS_STS_API AssumeRoleWithSAMLResult
+  class AssumeRoleWithSAMLResult
   {
   public:
-    AssumeRoleWithSAMLResult();
-    AssumeRoleWithSAMLResult(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
-    AssumeRoleWithSAMLResult& operator=(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
+    AWS_STS_API AssumeRoleWithSAMLResult();
+    AWS_STS_API AssumeRoleWithSAMLResult(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
+    AWS_STS_API AssumeRoleWithSAMLResult& operator=(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
 
 
     /**
@@ -352,8 +352,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline const Aws::String& GetNameQualifier() const{ return m_nameQualifier; }
@@ -364,8 +364,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline void SetNameQualifier(const Aws::String& value) { m_nameQualifier = value; }
@@ -376,8 +376,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline void SetNameQualifier(Aws::String&& value) { m_nameQualifier = std::move(value); }
@@ -388,8 +388,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline void SetNameQualifier(const char* value) { m_nameQualifier.assign(value); }
@@ -400,8 +400,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline AssumeRoleWithSAMLResult& WithNameQualifier(const Aws::String& value) { SetNameQualifier(value); return *this;}
@@ -412,8 +412,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline AssumeRoleWithSAMLResult& WithNameQualifier(Aws::String&& value) { SetNameQualifier(std::move(value)); return *this;}
@@ -424,8 +424,8 @@ namespace Model
      * Services account ID.</p> </li> <li> <p>The friendly name (the last part of the
      * ARN) of the SAML provider in IAM.</p> </li> </ul> <p>The combination of
      * <code>NameQualifier</code> and <code>Subject</code> can be used to uniquely
-     * identify a federated user.</p> <p>The following pseudocode shows how the hash
-     * value is calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
+     * identify a user.</p> <p>The following pseudocode shows how the hash value is
+     * calculated:</p> <p> <code>BASE64 ( SHA1 ( "https://example.com/saml" +
      * "123456789012" + "/MySAMLIdP" ) )</code> </p>
      */
     inline AssumeRoleWithSAMLResult& WithNameQualifier(const char* value) { SetNameQualifier(value); return *this;}

@@ -26,15 +26,15 @@ namespace Redshift
 namespace Model
 {
 
-  class AWS_REDSHIFT_API DataShare
+  class DataShare
   {
   public:
-    DataShare();
-    DataShare(const Aws::Utils::Xml::XmlNode& xmlNode);
-    DataShare& operator=(const Aws::Utils::Xml::XmlNode& xmlNode);
+    AWS_REDSHIFT_API DataShare();
+    AWS_REDSHIFT_API DataShare(const Aws::Utils::Xml::XmlNode& xmlNode);
+    AWS_REDSHIFT_API DataShare& operator=(const Aws::Utils::Xml::XmlNode& xmlNode);
 
-    void OutputToStream(Aws::OStream& ostream, const char* location, unsigned index, const char* locationValue) const;
-    void OutputToStream(Aws::OStream& oStream, const char* location) const;
+    AWS_REDSHIFT_API void OutputToStream(Aws::OStream& ostream, const char* location, unsigned index, const char* locationValue) const;
+    AWS_REDSHIFT_API void OutputToStream(Aws::OStream& oStream, const char* location) const;
 
 
     /**
@@ -262,13 +262,10 @@ namespace Model
     inline const ResponseMetadata& GetResponseMetadata() const{ return m_responseMetadata; }
 
     
-    inline bool ResponseMetadataHasBeenSet() const { return m_responseMetadataHasBeenSet; }
+    inline void SetResponseMetadata(const ResponseMetadata& value) { m_responseMetadata = value; }
 
     
-    inline void SetResponseMetadata(const ResponseMetadata& value) { m_responseMetadataHasBeenSet = true; m_responseMetadata = value; }
-
-    
-    inline void SetResponseMetadata(ResponseMetadata&& value) { m_responseMetadataHasBeenSet = true; m_responseMetadata = std::move(value); }
+    inline void SetResponseMetadata(ResponseMetadata&& value) { m_responseMetadata = std::move(value); }
 
     
     inline DataShare& WithResponseMetadata(const ResponseMetadata& value) { SetResponseMetadata(value); return *this;}
@@ -279,22 +276,21 @@ namespace Model
   private:
 
     Aws::String m_dataShareArn;
-    bool m_dataShareArnHasBeenSet;
+    bool m_dataShareArnHasBeenSet = false;
 
     Aws::String m_producerArn;
-    bool m_producerArnHasBeenSet;
+    bool m_producerArnHasBeenSet = false;
 
     bool m_allowPubliclyAccessibleConsumers;
-    bool m_allowPubliclyAccessibleConsumersHasBeenSet;
+    bool m_allowPubliclyAccessibleConsumersHasBeenSet = false;
 
     Aws::Vector<DataShareAssociation> m_dataShareAssociations;
-    bool m_dataShareAssociationsHasBeenSet;
+    bool m_dataShareAssociationsHasBeenSet = false;
 
     Aws::String m_managedBy;
-    bool m_managedByHasBeenSet;
+    bool m_managedByHasBeenSet = false;
 
     ResponseMetadata m_responseMetadata;
-    bool m_responseMetadataHasBeenSet;
   };
 
 } // namespace Model

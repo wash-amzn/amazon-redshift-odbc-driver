@@ -20,10 +20,10 @@ namespace Model
 
   /**
    */
-  class AWS_REDSHIFTSERVERLESS_API UpdateNamespaceRequest : public RedshiftServerlessRequest
+  class UpdateNamespaceRequest : public RedshiftServerlessRequest
   {
   public:
-    UpdateNamespaceRequest();
+    AWS_REDSHIFTSERVERLESS_API UpdateNamespaceRequest();
 
     // Service request name is the Operation name which will send this request out,
     // each operation should has unique request name, so that we can get operation's name from this request.
@@ -31,200 +31,233 @@ namespace Model
     // so we can not get operation's name from response.
     inline virtual const char* GetServiceRequestName() const override { return "UpdateNamespace"; }
 
-    Aws::String SerializePayload() const override;
+    AWS_REDSHIFTSERVERLESS_API Aws::String SerializePayload() const override;
 
-    Aws::Http::HeaderValueCollection GetRequestSpecificHeaders() const override;
+    AWS_REDSHIFTSERVERLESS_API Aws::Http::HeaderValueCollection GetRequestSpecificHeaders() const override;
 
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline const Aws::String& GetAdminUserPassword() const{ return m_adminUserPassword; }
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline bool AdminUserPasswordHasBeenSet() const { return m_adminUserPasswordHasBeenSet; }
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline void SetAdminUserPassword(const Aws::String& value) { m_adminUserPasswordHasBeenSet = true; m_adminUserPassword = value; }
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline void SetAdminUserPassword(Aws::String&& value) { m_adminUserPasswordHasBeenSet = true; m_adminUserPassword = std::move(value); }
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline void SetAdminUserPassword(const char* value) { m_adminUserPasswordHasBeenSet = true; m_adminUserPassword.assign(value); }
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline UpdateNamespaceRequest& WithAdminUserPassword(const Aws::String& value) { SetAdminUserPassword(value); return *this;}
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline UpdateNamespaceRequest& WithAdminUserPassword(Aws::String&& value) { SetAdminUserPassword(std::move(value)); return *this;}
 
     /**
      * <p>The password of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUsername</code>.</p>
      */
     inline UpdateNamespaceRequest& WithAdminUserPassword(const char* value) { SetAdminUserPassword(value); return *this;}
 
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline const Aws::String& GetAdminUsername() const{ return m_adminUsername; }
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline bool AdminUsernameHasBeenSet() const { return m_adminUsernameHasBeenSet; }
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline void SetAdminUsername(const Aws::String& value) { m_adminUsernameHasBeenSet = true; m_adminUsername = value; }
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline void SetAdminUsername(Aws::String&& value) { m_adminUsernameHasBeenSet = true; m_adminUsername = std::move(value); }
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline void SetAdminUsername(const char* value) { m_adminUsernameHasBeenSet = true; m_adminUsername.assign(value); }
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline UpdateNamespaceRequest& WithAdminUsername(const Aws::String& value) { SetAdminUsername(value); return *this;}
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline UpdateNamespaceRequest& WithAdminUsername(Aws::String&& value) { SetAdminUsername(std::move(value)); return *this;}
 
     /**
      * <p>The username of the administrator for the first database created in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>adminUserPassword</code>.</p>
      */
     inline UpdateNamespaceRequest& WithAdminUsername(const char* value) { SetAdminUsername(value); return *this;}
 
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline const Aws::String& GetDefaultIamRoleArn() const{ return m_defaultIamRoleArn; }
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline bool DefaultIamRoleArnHasBeenSet() const { return m_defaultIamRoleArnHasBeenSet; }
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline void SetDefaultIamRoleArn(const Aws::String& value) { m_defaultIamRoleArnHasBeenSet = true; m_defaultIamRoleArn = value; }
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline void SetDefaultIamRoleArn(Aws::String&& value) { m_defaultIamRoleArnHasBeenSet = true; m_defaultIamRoleArn = std::move(value); }
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline void SetDefaultIamRoleArn(const char* value) { m_defaultIamRoleArnHasBeenSet = true; m_defaultIamRoleArn.assign(value); }
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline UpdateNamespaceRequest& WithDefaultIamRoleArn(const Aws::String& value) { SetDefaultIamRoleArn(value); return *this;}
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline UpdateNamespaceRequest& WithDefaultIamRoleArn(Aws::String&& value) { SetDefaultIamRoleArn(std::move(value)); return *this;}
 
     /**
      * <p>The Amazon Resource Name (ARN) of the IAM role to set as a default in the
-     * namespace.</p>
+     * namespace. This parameter must be updated together with
+     * <code>iamRoles</code>.</p>
      */
     inline UpdateNamespaceRequest& WithDefaultIamRoleArn(const char* value) { SetDefaultIamRoleArn(value); return *this;}
 
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline const Aws::Vector<Aws::String>& GetIamRoles() const{ return m_iamRoles; }
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline bool IamRolesHasBeenSet() const { return m_iamRolesHasBeenSet; }
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline void SetIamRoles(const Aws::Vector<Aws::String>& value) { m_iamRolesHasBeenSet = true; m_iamRoles = value; }
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline void SetIamRoles(Aws::Vector<Aws::String>&& value) { m_iamRolesHasBeenSet = true; m_iamRoles = std::move(value); }
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline UpdateNamespaceRequest& WithIamRoles(const Aws::Vector<Aws::String>& value) { SetIamRoles(value); return *this;}
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline UpdateNamespaceRequest& WithIamRoles(Aws::Vector<Aws::String>&& value) { SetIamRoles(std::move(value)); return *this;}
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline UpdateNamespaceRequest& AddIamRoles(const Aws::String& value) { m_iamRolesHasBeenSet = true; m_iamRoles.push_back(value); return *this; }
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline UpdateNamespaceRequest& AddIamRoles(Aws::String&& value) { m_iamRolesHasBeenSet = true; m_iamRoles.push_back(std::move(value)); return *this; }
 
     /**
-     * <p>A list of IAM roles to associate with the namespace.</p>
+     * <p>A list of IAM roles to associate with the namespace. This parameter must be
+     * updated together with <code>defaultIamRoleArn</code>.</p>
      */
     inline UpdateNamespaceRequest& AddIamRoles(const char* value) { m_iamRolesHasBeenSet = true; m_iamRoles.push_back(value); return *this; }
 
@@ -336,67 +369,75 @@ namespace Model
 
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline const Aws::String& GetNamespaceName() const{ return m_namespaceName; }
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline bool NamespaceNameHasBeenSet() const { return m_namespaceNameHasBeenSet; }
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline void SetNamespaceName(const Aws::String& value) { m_namespaceNameHasBeenSet = true; m_namespaceName = value; }
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline void SetNamespaceName(Aws::String&& value) { m_namespaceNameHasBeenSet = true; m_namespaceName = std::move(value); }
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline void SetNamespaceName(const char* value) { m_namespaceNameHasBeenSet = true; m_namespaceName.assign(value); }
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline UpdateNamespaceRequest& WithNamespaceName(const Aws::String& value) { SetNamespaceName(value); return *this;}
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline UpdateNamespaceRequest& WithNamespaceName(Aws::String&& value) { SetNamespaceName(std::move(value)); return *this;}
 
     /**
-     * <p>The name of the namespace.</p>
+     * <p>The name of the namespace to update. You can't update the name of a namespace
+     * once it is created.</p>
      */
     inline UpdateNamespaceRequest& WithNamespaceName(const char* value) { SetNamespaceName(value); return *this;}
 
   private:
 
     Aws::String m_adminUserPassword;
-    bool m_adminUserPasswordHasBeenSet;
+    bool m_adminUserPasswordHasBeenSet = false;
 
     Aws::String m_adminUsername;
-    bool m_adminUsernameHasBeenSet;
+    bool m_adminUsernameHasBeenSet = false;
 
     Aws::String m_defaultIamRoleArn;
-    bool m_defaultIamRoleArnHasBeenSet;
+    bool m_defaultIamRoleArnHasBeenSet = false;
 
     Aws::Vector<Aws::String> m_iamRoles;
-    bool m_iamRolesHasBeenSet;
+    bool m_iamRolesHasBeenSet = false;
 
     Aws::String m_kmsKeyId;
-    bool m_kmsKeyIdHasBeenSet;
+    bool m_kmsKeyIdHasBeenSet = false;
 
     Aws::Vector<LogExport> m_logExports;
-    bool m_logExportsHasBeenSet;
+    bool m_logExportsHasBeenSet = false;
 
     Aws::String m_namespaceName;
-    bool m_namespaceNameHasBeenSet;
+    bool m_namespaceNameHasBeenSet = false;
   };
 
 } // namespace Model

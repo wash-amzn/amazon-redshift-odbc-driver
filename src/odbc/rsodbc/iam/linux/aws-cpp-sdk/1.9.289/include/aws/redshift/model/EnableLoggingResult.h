@@ -33,12 +33,12 @@ namespace Model
    * href="http://docs.aws.amazon.com/goto/WebAPI/redshift-2012-12-01/LoggingStatus">AWS
    * API Reference</a></p>
    */
-  class AWS_REDSHIFT_API EnableLoggingResult
+  class EnableLoggingResult
   {
   public:
-    EnableLoggingResult();
-    EnableLoggingResult(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
-    EnableLoggingResult& operator=(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
+    AWS_REDSHIFT_API EnableLoggingResult();
+    AWS_REDSHIFT_API EnableLoggingResult(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
+    AWS_REDSHIFT_API EnableLoggingResult& operator=(const Aws::AmazonWebServiceResult<Aws::Utils::Xml::XmlDocument>& result);
 
 
     /**
@@ -252,50 +252,58 @@ namespace Model
 
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline const Aws::Vector<Aws::String>& GetLogExports() const{ return m_logExports; }
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline void SetLogExports(const Aws::Vector<Aws::String>& value) { m_logExports = value; }
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline void SetLogExports(Aws::Vector<Aws::String>&& value) { m_logExports = std::move(value); }
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline EnableLoggingResult& WithLogExports(const Aws::Vector<Aws::String>& value) { SetLogExports(value); return *this;}
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline EnableLoggingResult& WithLogExports(Aws::Vector<Aws::String>&& value) { SetLogExports(std::move(value)); return *this;}
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline EnableLoggingResult& AddLogExports(const Aws::String& value) { m_logExports.push_back(value); return *this; }
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline EnableLoggingResult& AddLogExports(Aws::String&& value) { m_logExports.push_back(std::move(value)); return *this; }
 
     /**
-     * <p>The collection of exported log types. Log types include the connection log,
-     * user log and user activity log.</p>
+     * <p>The collection of exported log types. Possible values are
+     * <code>connectionlog</code>, <code>useractivitylog</code>, and
+     * <code>userlog</code>.</p>
      */
     inline EnableLoggingResult& AddLogExports(const char* value) { m_logExports.push_back(value); return *this; }
 

@@ -18,10 +18,10 @@ namespace Model
 
   /**
    */
-  class AWS_REDSHIFT_API GetClusterCredentialsWithIAMRequest : public RedshiftRequest
+  class GetClusterCredentialsWithIAMRequest : public RedshiftRequest
   {
   public:
-    GetClusterCredentialsWithIAMRequest();
+    AWS_REDSHIFT_API GetClusterCredentialsWithIAMRequest();
 
     // Service request name is the Operation name which will send this request out,
     // each operation should has unique request name, so that we can get operation's name from this request.
@@ -29,10 +29,10 @@ namespace Model
     // so we can not get operation's name from response.
     inline virtual const char* GetServiceRequestName() const override { return "GetClusterCredentialsWithIAM"; }
 
-    Aws::String SerializePayload() const override;
+    AWS_REDSHIFT_API Aws::String SerializePayload() const override;
 
   protected:
-    void DumpBodyToUrl(Aws::Http::URI& uri ) const override;
+    AWS_REDSHIFT_API void DumpBodyToUrl(Aws::Http::URI& uri ) const override;
 
   public:
 
@@ -174,16 +174,60 @@ namespace Model
      */
     inline GetClusterCredentialsWithIAMRequest& WithDurationSeconds(int value) { SetDurationSeconds(value); return *this;}
 
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline const Aws::String& GetCustomDomainName() const{ return m_customDomainName; }
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline bool CustomDomainNameHasBeenSet() const { return m_customDomainNameHasBeenSet; }
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline void SetCustomDomainName(const Aws::String& value) { m_customDomainNameHasBeenSet = true; m_customDomainName = value; }
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline void SetCustomDomainName(Aws::String&& value) { m_customDomainNameHasBeenSet = true; m_customDomainName = std::move(value); }
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline void SetCustomDomainName(const char* value) { m_customDomainNameHasBeenSet = true; m_customDomainName.assign(value); }
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline GetClusterCredentialsWithIAMRequest& WithCustomDomainName(const Aws::String& value) { SetCustomDomainName(value); return *this;}
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline GetClusterCredentialsWithIAMRequest& WithCustomDomainName(Aws::String&& value) { SetCustomDomainName(std::move(value)); return *this;}
+
+    /**
+     * <p>The custom domain name for the IAM message cluster credentials.</p>
+     */
+    inline GetClusterCredentialsWithIAMRequest& WithCustomDomainName(const char* value) { SetCustomDomainName(value); return *this;}
+
   private:
 
     Aws::String m_dbName;
-    bool m_dbNameHasBeenSet;
+    bool m_dbNameHasBeenSet = false;
 
     Aws::String m_clusterIdentifier;
-    bool m_clusterIdentifierHasBeenSet;
+    bool m_clusterIdentifierHasBeenSet = false;
 
     int m_durationSeconds;
-    bool m_durationSecondsHasBeenSet;
+    bool m_durationSecondsHasBeenSet = false;
+
+    Aws::String m_customDomainName;
+    bool m_customDomainNameHasBeenSet = false;
   };
 
 } // namespace Model
