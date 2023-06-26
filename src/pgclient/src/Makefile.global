@@ -225,7 +225,7 @@ CFLAGS = -O2 -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-stat
 ifdef LINUX32
 override CFLAGS := -m32 $(CFLAGS)
 else
-override CFLAGS := -m64 $(CFLAGS)
+override CFLAGS := $(CFLAGS)
 endif #LINUX32
 
 
@@ -361,9 +361,9 @@ PORTNAME= linux
 
 build_os = linux-gnu
 
-host_tuple = x86_64-unknown-linux-gnu
+host_tuple = $$(arch)-unknown-linux-gnu
 host_os = linux-gnu
-host_cpu = x86_64
+host_cpu = $$(arch)
 
 # Make HAVE_IPV6 available for initdb script creation
 HAVE_IPV6= yes
